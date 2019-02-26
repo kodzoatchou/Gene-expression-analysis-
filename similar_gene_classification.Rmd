@@ -1,0 +1,118 @@
+---
+title: "Genes similar to known antigens clustering"
+author: "Kodzo Atchou"
+date: "2/26/2019"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r, load packages, include=TRUE}
+library(scales)
+library(ggplot2)
+library(reshape2)
+library(gridExtra)
+library(grid)
+library(cowplot)
+library(gtable)
+library(devtools)
+library(patchwork)
+```
+
+
+```{r, Read data, include=TRUE}
+setwd("")
+#read cluster table 
+data <- read.csv("", sep = ',',
+                   stringsAsFactors = F, header = T)
+data$sporozoite <- NULL
+head(data)
+```
+
+```{r, plot, include=TRUE}
+plot_func <- function(title, choose_cluster){
+  df <- head(choose_cluster[,1:3], 10)
+  dfm <- melt(df, id.vars="target.id")
+  ggplot(dfm, aes(x=variable, y=value, colour=target.id, group = target.id)) +
+    geom_point() + geom_line() + 
+    ggtitle(title) +
+    ylab("TPM") + 
+    xlab("") + 
+    theme(
+      plot.title = element_text(size = 10, face = "bold"),
+      legend.title = element_blank(),
+      panel.background = element_rect(fill = "white"),
+      axis.line = element_line(),
+      legend.text = element_text(lineheight = 0.5, size = 10, face = "plain"),
+      legend.direction = "vertical", 
+      legend.spacing.x = unit(1, 'cm'),
+      axis.text.x = element_text(angle = 90, hjust = 0.5, size = , face = "bold", 
+                                 vjust = 0.5), 
+      axis.title.x = element_text(hjust = 0.5, size = 10, face = "plain"),
+      axis.text.y = element_text(hjust =0.5, size = 10, face = "plain"), 
+      axis.title.y = element_text(hjust = 0.5, size = 10, face = "plain")) +
+    theme(legend.key.height=unit(0.5,"line")) +
+    theme(legend.key.width=unit(0.5,"line"))
+}
+```
+```{r, genes classification based on TPM count, incluse=TRUE}
+choose_cluster9 <- data[data$cluster == 9,]
+choose_cluster22 <- data[data$cluster == 22,]
+choose_cluster41 <- data[data$cluster == 41,]
+choose_cluster36 <- data[data$cluster == 36,]
+choose_cluster17 <- data[data$cluster == 17,]
+choose_cluster8 <- data[data$cluster == 8,]
+choose_cluster1 <- data[data$cluster == 1,]
+choose_cluster6 <- data[data$cluster == 6,]
+choose_cluster18 <- data[data$cluster == 18,]
+choose_cluster7 <- data[data$cluster == 7,]
+choose_cluster15 <- data[data$cluster == 15,]
+choose_cluster55 <- data[data$cluster == 55,]
+choose_cluster58 <- data[data$cluster == 58,]
+choose_cluster53 <- data[data$cluster == 53,]
+choose_cluster54 <- data[data$cluster == 54,]
+choose_cluster55 <- data[data$cluster == 55,]
+choose_cluster56 <- data[data$cluster == 56,]
+choose_cluster57 <- data[data$cluster == 57,]
+choose_cluster59 <- data[data$cluster == 59,]
+choose_cluster60 <- data[data$cluster == 60,]
+choose_cluster61 <- data[data$cluster == 61,]
+```
+
+```{r, Identifiy the antigen genes with their names,incluse=TRUE}
+cl15 <- plot_func("XM_757893.1 (p150)", choose_cluster15)
+cl7 <- plot_func("XM_760370.1 (Tp9)", choose_cluster7)
+cl8 <- plot_func("XM_760490.1 (Tp2)", choose_cluster55)
+cl9 <- plot_func("XM_761296.1 (Tp3)", choose_cluster58)
+cl17a <- plot_func("XM_758135.1 (Tp4)", choose_cluster53)
+cl17b <- plot_func("XM_760622.1 (Tp6)", choose_cluster54)
+cl41 <- plot_func("XM_759717.1 (Tp7)", choose_cluster41)
+cl36 <- plot_func("XM_759616.1 (Tp8)", choose_cluster60)
+cl22 <- plot_func("XM_759315.1 (Tp10)", choose_cluster22)
+cl1 <- plot_func("XM_758212.1 (P67)", choose_cluster61)
+cl18 <- plot_func("XM_758979.1 (P104)", choose_cluster18)
+cl17c <- plot_func("XM_760073.1 (PCNA)", choose_cluster56)
+cl6 <- plot_func("XM_758372.1(TP03_0445)", choose_cluster59)
+cl41b <- plot_func("XM_758593.1 (PIM)", choose_cluster41)
+cl17d <- plot_func("XM_757880.1 (Tp1)", choose_cluster17)
+cl17e <- plot_func("XM_760241.1 (Tp5)", choose_cluster57)
+```
+
+```{r, Generate the plot and save in different formats, echo=TRUE}
+tl1 <- grid.arrange(arrangeGrob(cl17d, cl8, cl9, cl17a, cl17e, cl17b, cl41, cl36, cl7, cl22, cl1, cl18, cl17c, cl6,cl41b, ncol = 4, nrow = 4))
+
+ggsave("clusters.png", tl1, width = 17.5, height = 18.75, dpi = 300, 
+       units = "in", device = "png")
+ggsave("clusters1.pdf", tl1, width = 17.5, height = 18.75, dpi = 300, 
+       units = "in", device = "pdf")
+ggsave("clusters2.eps", tl1, width = 17.5, height = 18.75, dpi = 300, 
+       units = "in", device = "eps")
+
+ggsave("clusters.tiff", tl1, width = 17.5, height = 18.75, dpi = 300, 
+       units = "in", device = "tiff")
+
+dev.off()
+```
+
